@@ -1,0 +1,7 @@
+DEFINE
+    MEASURE 'Measure Table (2)'[Quantity Return] = sum('Returns Data'[ReturnQuantity])
+
+EVALUATE
+    SUMMARIZECOLUMNS(
+        "Quantity Return", [Quantity Return]
+    )

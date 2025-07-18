@@ -1,0 +1,199 @@
+table 'Measure Table (2)'
+	lineageTag: 9885f2a8-535a-44f8-9955-65fb20287858
+
+	measure 'average retail price' = AVERAGE('Product Lookup'[ProductCost])
+		formatString: "₹"\ #,0.###############;#,0.###############\ -"₹";"₹"\ #,0.###############
+		lineageTag: 388cdd42-9272-48af-bd32-c3786128b0a5
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-IN"}
+
+	measure 'Quantity Return' = sum('Returns Data'[ReturnQuantity])
+		formatString: 0
+		lineageTag: a15498ff-e48a-4ffb-9a85-c0a9c180e39c
+
+	measure 'net order quantity' = sum ('Sales Data'[OrderQuantity])- SUM('Returns Data'[ReturnQuantity])
+		formatString: 0
+		lineageTag: 27d68812-2779-481e-8ef7-a661f5cff42a
+
+	measure 'Total returns' = COUNT( 'Returns Data'[ReturnQuantity])
+		formatString: 0
+		lineageTag: 111e9872-2bba-418c-af94-2c119601b500
+
+	measure 'Total Orders' = DISTINCTCOUNT('Sales Data'[OrderNumber])
+		formatString: 0
+		lineageTag: facf1bef-cf25-4222-9a1e-09e82352b31c
+
+	measure 'Quantity sold' = SUM('Sales Data'[OrderQuantity])
+		formatString: 0
+		lineageTag: 3db7dc57-c511-4642-a01e-ee7a8171f887
+
+	measure 'Total Customber' = DISTINCTCOUNT('Sales Data'[CustomerKey])
+		formatString: 0
+		lineageTag: 616b32ff-009b-475c-bdcb-71276b4f97bc
+
+	measure 'Return Rate' = [Quantity Return]/[Quantity sold]
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 80450331-f9f2-4a69-bbd6-9ce72d0ff950
+
+	measure 'Bulk Orders' =
+			CALCULATE(
+			     [Total Orders],
+			     'Sales Data'[OrderDate]>1
+			)
+		formatString: 0
+		lineageTag: d4744b8c-7988-490f-be5c-a0281ae58ed2
+
+	measure 'weekend orders' = CALCULATE([Total Orders],'Calendar Lookup'[Weekend]="weekend")
+		formatString: 0
+		lineageTag: 85f0b6b8-6a9f-4da1-954a-21812592e68c
+
+	measure 'bike returns' = CALCULATE([Total returns],'Product Categories Lookup'[CategoryName]="bikes")
+		formatString: 0
+		lineageTag: d4c0575b-6b82-4948-b7c1-6f928168f938
+
+	measure 'bike sold' = CALCULATE([Quantity sold],'Product Categories Lookup'[CategoryName]="bikes")
+		formatString: 0
+		lineageTag: 7be7d4cf-e4b7-48d6-b44f-97c023bf74f9
+
+	measure 'Bike Return Rate' = CALCULATE([Return Rate],'Product Categories Lookup'[CategoryName]="Bikes"  )
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 5c54edc3-7467-44c6-afbc-3ef220d19b55
+
+	measure 'ALL orders' = CALCULATE([Total Orders],ALL('Sales Data'))
+		formatString: 0
+		lineageTag: ac456ebb-6d32-4a85-8dc8-51abae3d4d3e
+
+	measure '% of all order' = ```
+			DIVIDE([Total Orders],[ALL orders]) 
+			```
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: c808e702-ea02-4e80-8abf-d587493c804d
+
+	measure 'Overall Average Price' = ```
+			CALCULATE([average retail price],ALL('Product Lookup')) 
+			```
+		formatString: "₹"\ #,0.###############;#,0.###############\ -"₹";"₹"\ #,0.###############
+		lineageTag: 451a365c-f8ae-488f-8ad8-7758fc3c18c9
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-IN"}
+
+	measure 'All returns' = ```
+			CALCULATE([Total returns],ALL('Returns Data')) 
+			```
+		formatString: 0
+		lineageTag: b7b9df61-0a34-43fd-be21-aa86a3ddd76b
+
+	measure '% OF ALL RETURN' = ```
+			DIVIDE([Total returns],[All returns]) 
+			```
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 711e9107-483c-4bef-829e-b201e853b735
+
+	measure 'High Ticket Orders' = CALCULATE([Total Orders],FILTER('Product Lookup','Product Lookup'[ProductPrice] > 'Measure Table (2)'[Overall Average Price]))
+		formatString: 0
+		lineageTag: 38bafed8-600c-48d7-b49c-cecedb1a8e7a
+
+	measure 'Total Revenue' = ```
+			SUMX('Sales Data','Sales Data'[OrderQuantity]*'Sales Data'[Retail price]) 
+			```
+		lineageTag: 100c194f-f536-485d-971e-198fbf3ca561
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Average revenue  per customer' = ```
+			DIVIDE([Total Revenue],[Total Customber])  
+			```
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: f0980921-7a19-44da-9bfe-6bf030db7de3
+
+	measure 'total cost' = ```
+			SUMX('Sales Data', 
+			'Sales Data'[OrderQuantity] * RELATED('Product Lookup'[ProductCost]))
+			```
+		formatString: "₹"\ #,0.###############;#,0.###############\ -"₹";"₹"\ #,0.###############
+		lineageTag: ce641178-0354-4027-8a6d-9c6472068c64
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-IN"}
+
+	measure 'Total profit' = [Total Revenue]-[total cost]
+		lineageTag: a81da697-bc97-4f1c-bdae-763e8a194927
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Previous Month Orders' = ```
+			CALCULATE([Total Orders],DATEADD('Calendar Lookup'[Date],-1,MONTH)) 
+			```
+		formatString: 0
+		lineageTag: 949ed8da-471b-4bb1-8859-f0f8cef8dcf0
+
+	measure 'Previous Month Profit' = ```
+			CALCULATE([Total profit],DATEADD('Calendar Lookup'[Date],-1,MONTH)) 
+			```
+		lineageTag: 99ce7c1e-1751-4ee1-8747-260de04d861c
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Previous Month Returns' = ```
+			CALCULATE([Total returns],DATEADD('Calendar Lookup'[Date],-1,MONTH))  
+			```
+		formatString: 0
+		lineageTag: 1084126e-dcbf-496b-9223-bb3da4b884bc
+
+	measure 'Previous Month Revenue' = ```
+			CALCULATE([Total Revenue],DATEADD('Calendar Lookup'[Date],-1,MONTH))  
+			```
+		lineageTag: e7f0de0f-a62b-432e-a5f7-3e09f45c3294
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Total Orders (Customer Detail)' = IF(HASONEVALUE('Customer Lookup'[CustomerKey]),[Total Orders],"-")
+		lineageTag: a6ae8768-5259-42cf-9c5b-30b5feb7acd0
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Total Revenue (Customer Detail)' = IF(HASONEVALUE('Customer Lookup'[CustomerKey]),[Total Revenue],"-")
+		lineageTag: 5154d2d1-af2b-4c6e-a6b2-2f8e7f621718
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Adjudted price' = 'Measure Table (2)'[average retail price]*(1 + 'Price Adjustement (%)'[Price Adjustement (%) Value] )
+		formatString: "₹"\ #,0.###############;#,0.###############\ -"₹";"₹"\ #,0.###############
+		lineageTag: 4fe942c0-615e-48ea-b74b-c4683ca02556
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-IN"}
+
+	measure 'Adjusted Revenue' = ```
+			SUMX('Sales Data','Sales Data'[OrderQuantity]*'Sales Data'[OrderQuantity]*[Adjudted price])  
+			```
+		formatString: "₹"\ #,0.###############;#,0.###############\ -"₹";"₹"\ #,0.###############
+		lineageTag: ab12f5e0-c79f-43d0-8556-b088761b6a7d
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-IN"}
+
+	measure 'Adjusted profit' = ```
+			[Adjusted Revenue]-[total cost] 
+			```
+		formatString: "₹"\ #,0.###############;#,0.###############\ -"₹";"₹"\ #,0.###############
+		lineageTag: 47536d6c-6fd8-404b-a1c7-b4efa3418cb4
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-IN"}
+
+	column Column1
+		dataType: string
+		lineageTag: d9103117-bd8e-49ae-943b-d187c18ccffc
+		summarizeBy: none
+		sourceColumn: Column1
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Measure Table (2)' = m
+		mode: import
+		source =
+				let
+				    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("i44FAA==", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [Column1 = _t]),
+				    #"Changed Type" = Table.TransformColumnTypes(Source,{{"Column1", type text}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_ResultType = Table
+

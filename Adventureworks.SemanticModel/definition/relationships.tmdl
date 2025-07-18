@@ -1,0 +1,71 @@
+relationship c2f279b1-a868-41ee-aca3-c78bd9928a9f
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Customer Lookup'.BirthDate
+	toColumn: LocalDateTable_685aefb5-80e0-46c4-854c-7949a826bf7e.Date
+
+relationship fc108c97-3856-41bf-b12d-418a19a7da1c
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Calendar Lookup'.Date
+	toColumn: LocalDateTable_b7ec1567-f21a-4db8-8001-c38d5c600faa.Date
+
+relationship ee701809-16d5-4e51-b332-6ac9c2149141
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Calendar Lookup'.'Start of Month'
+	toColumn: LocalDateTable_294e551b-b415-4cf9-99db-71242ae792d2.Date
+
+relationship d0db4151-dd0a-43a0-aa72-65ffb7b8cceb
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Calendar Lookup'.'Start of Quarter'
+	toColumn: LocalDateTable_f73d7099-5e53-4441-8f2a-53d741f82fd4.Date
+
+relationship d09e4d7e-84e7-46dc-8849-6a930a5bfa78
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Calendar Lookup'.'Start of Year'
+	toColumn: LocalDateTable_e4e8b3e8-3b55-4f72-ad9a-c3c339bb4163.Date
+
+relationship e24fd349-90b5-3bc6-9462-5f23d6f50d0b
+	fromColumn: 'Sales Data'.CustomerKey
+	toColumn: 'Customer Lookup'.CustomerKey
+
+relationship 8b38a3b9-6c25-a047-d8dd-e7c76e24732c
+	fromColumn: 'Sales Data'.TerritoryKey
+	toColumn: 'Territory Lookup'.SalesTerritoryKey
+
+relationship 20f80439-7e97-d1c2-58ed-3934c1ef23fc
+	fromColumn: 'Sales Data'.ProductKey
+	toColumn: 'Product Lookup'.ProductKey
+
+relationship 53ff1085-fdc6-4e1b-887c-01e34bdd50d2
+	fromColumn: 'Sales Data'.StockDate
+	toColumn: 'Calendar Lookup'.Date
+
+relationship 06aea075-7701-f293-d740-04602f89bdf1
+	fromColumn: 'Product Lookup'.ProductSubcategoryKey
+	toColumn: 'Product Subcategories Lookup'.ProductSubcategoryKey
+
+relationship 1cdc9bbe-b4ba-e3d0-25f1-9325de6a377c
+	fromColumn: 'Product Subcategories Lookup'.ProductCategoryKey
+	toColumn: 'Product Categories Lookup'.ProductCategoryKey
+
+relationship 08ffc9b0-63ef-af1a-df3b-cfe127ad5424
+	isActive: false
+	fromColumn: 'Sales Data'.OrderDate
+	toColumn: 'Calendar Lookup'.Date
+
+relationship e86a9131-f632-4e87-bf16-774d5a305aac
+	fromColumn: 'Returns Data'.ProductKey
+	toColumn: 'Product Lookup'.ProductKey
+
+relationship 23ca0912-3a2f-31cb-0bc8-427f37fb9338
+	fromColumn: 'Returns Data'.ReturnDate
+	toColumn: 'Calendar Lookup'.Date
+
+relationship 36cdb55c-041f-a7ff-706b-4740f298cec6
+	fromColumn: 'Returns Data'.TerritoryKey
+	toColumn: 'Territory Lookup'.SalesTerritoryKey
+
+relationship fb6362c8-32f6-4f24-bcbe-b5e95f255a97
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Calendar Lookup'.'Start of Week'
+	toColumn: LocalDateTable_338b3239-9ea6-4430-98ae-e467f2046916.Date
+

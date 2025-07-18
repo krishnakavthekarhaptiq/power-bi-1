@@ -1,0 +1,51 @@
+table 'product parameter'
+	lineageTag: 2652c1f3-23bd-42bb-8eb4-329cd837735a
+
+	column 'product parameter'
+		lineageTag: 32762e2a-039e-4984-b402-2d1375014ab7
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: 'product parameter Order'
+
+		relatedColumnDetails
+			groupByColumn: 'product parameter Fields'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'product parameter Fields'
+		isHidden
+		lineageTag: 9845ff79-4489-4be7-a781-97566a0e1b59
+		summarizeBy: none
+		sourceColumn: [Value2]
+		sortByColumn: 'product parameter Order'
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'product parameter Order'
+		isHidden
+		formatString: 0
+		lineageTag: 609aa7d4-6553-4f3f-9c26-a8c86775ea75
+		summarizeBy: sum
+		sourceColumn: [Value3]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'product parameter' = calculated
+		mode: import
+		source =
+				{
+				    ("Total Revenue", NAMEOF('Measure Table (2)'[Total Revenue]), 0),
+				    ("Total returns", NAMEOF('Measure Table (2)'[Total returns]), 1),
+				    ("Total profit", NAMEOF('Measure Table (2)'[Total profit]), 2),
+				    ("Total Orders", NAMEOF('Measure Table (2)'[Total Orders]), 3),
+				    ("Return Rate", NAMEOF('Measure Table (2)'[Return Rate]), 4)
+				}
+
+	annotation PBI_Id = d13447916d9b458484b7d7d0d7be8e6e
+

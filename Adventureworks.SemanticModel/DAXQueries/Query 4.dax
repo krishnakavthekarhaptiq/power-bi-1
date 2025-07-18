@@ -1,0 +1,4 @@
+EVALUATE
+    SUMMARIZECOLUMNS(
+        "Previous Month Revenue", [Previous Month Revenue]
+    )

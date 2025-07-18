@@ -1,0 +1,48 @@
+table 'customer Parameter'
+	lineageTag: d573985a-a326-4dea-b9ad-759ecab7ad0b
+
+	column 'customer Parameter'
+		lineageTag: 295f926d-7f69-4cd5-aa7a-12f825fccbcc
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: 'customer Parameter Order'
+
+		relatedColumnDetails
+			groupByColumn: 'customer Parameter Fields'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'customer Parameter Fields'
+		isHidden
+		lineageTag: 8fdfd7a8-ce12-4ffa-9c68-59f3d33ed8cf
+		summarizeBy: none
+		sourceColumn: [Value2]
+		sortByColumn: 'customer Parameter Order'
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'customer Parameter Order'
+		isHidden
+		formatString: 0
+		lineageTag: 14307d06-7d0f-43e7-8f65-8688f4c06f9d
+		summarizeBy: sum
+		sourceColumn: [Value3]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'customer Parameter' = calculated
+		mode: import
+		source =
+				{
+				    ("Average revenue  per customer", NAMEOF('Measure Table (2)'[Average revenue  per customer]), 0),
+				    ("Total Customber", NAMEOF('Measure Table (2)'[Total Customber]), 1)
+				}
+
+	annotation PBI_Id = d4e8886b6b304a0e9933c6a7ea81eda9
+

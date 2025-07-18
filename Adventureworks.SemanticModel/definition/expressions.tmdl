@@ -1,0 +1,112 @@
+expression 'Sample File' =
+		let
+		    Source = Folder.Files("C:\Users\Krishna Kavthekar\Downloads\AdventureWorks+Raw+Data\AdventureWorks Raw Data\Sales Data"),
+		    Navigation1 = Source{0}[Content]
+		in
+		    Navigation1
+	lineageTag: 56d5af20-9fee-407b-a08f-b08fd8e5bd7e
+	queryGroup: 'Transform File from Sales Data\Helper Queries'
+
+	annotation PBI_ResultType = Binary
+
+expression Parameter1 = #"Sample File" meta [IsParameterQuery=true, BinaryIdentifier=#"Sample File", Type="Binary", IsParameterQueryRequired=true]
+	lineageTag: 41795461-4d21-496b-a7d0-0b00649830bd
+	queryGroup: 'Transform File from Sales Data\Helper Queries'
+
+	annotation PBI_ResultType = Binary
+
+expression 'Transform Sample File' =
+		let
+		    Source = Csv.Document(Parameter1,[Delimiter=",", Columns=8, Encoding=1252, QuoteStyle=QuoteStyle.None]),
+		    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true])
+		in
+		    #"Promoted Headers"
+	lineageTag: 04616835-55ed-48de-9194-24964efbcbd1
+	queryGroup: 'Transform File from Sales Data'
+
+	annotation PBI_ResultType = Table
+
+expression 'Transform File' =
+		let
+		    Source = (Parameter1 as binary) => let
+		    Source = Csv.Document(Parameter1,[Delimiter=",", Columns=8, Encoding=1252, QuoteStyle=QuoteStyle.None]),
+		    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true])
+		in
+		    #"Promoted Headers"
+		in
+		    Source
+	mAttributes: [ FunctionQueryBinding = "{""exemplarFormulaName"":""Transform Sample File""}" ]
+	lineageTag: d2d58c04-591b-48c4-aa79-27cb86944e21
+	queryGroup: 'Transform File from Sales Data\Helper Queries'
+
+	annotation PBI_ResultType = Function
+
+expression 'Sales Data 2022' =
+		let
+		    Source = Csv.Document(File.Contents("C:\Users\Krishna Kavthekar\Downloads\AdventureWorks+Raw+Data\AdventureWorks Raw Data\AdventureWorks Sales Data 2022.csv"),[Delimiter=",", Columns=8, Encoding=1252, QuoteStyle=QuoteStyle.None]),
+		    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+		    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"OrderDate", type date}, {"StockDate", type date}, {"OrderNumber", type text}, {"ProductKey", Int64.Type}, {"CustomerKey", Int64.Type}, {"TerritoryKey", Int64.Type}, {"OrderLineItem", Int64.Type}, {"OrderQuantity", Int64.Type}}),
+		    #"Added Index" = Table.AddIndexColumn(#"Changed Type", "Index", 1, 1, Int64.Type),
+		    #"Reordered Columns" = Table.ReorderColumns(#"Added Index",{"Index", "OrderDate", "StockDate", "OrderNumber", "ProductKey", "CustomerKey", "TerritoryKey", "OrderLineItem", "OrderQuantity"}),
+		    #"Removed Columns" = Table.RemoveColumns(#"Reordered Columns",{"Index"}),
+		    #"Added Conditional Column" = Table.AddColumn(#"Removed Columns", "Quantity count", each if [OrderQuantity] = 1 then "single item" else if [OrderQuantity] > 1 then "multiple items" else "no item"),
+		    #"Filtered Rows" = Table.SelectRows(#"Added Conditional Column", each true),
+		    #"Merged Queries" = Table.NestedJoin(#"Filtered Rows", {"ProductKey"}, #"Product Lookup", {"ProductKey"}, "Product Lookup", JoinKind.LeftOuter),
+		    #"Expanded Product Lookup" = Table.ExpandTableColumn(#"Merged Queries", "Product Lookup", {"ProductKey", "ProductName", "ProductColor"}, {"ProductKey.1", "ProductName", "ProductColor"}),
+		    #"Sorted Rows" = Table.Sort(#"Expanded Product Lookup",{{"ProductKey.1", Order.Ascending}})
+		in
+		    #"Sorted Rows"
+	lineageTag: 220eb318-14a6-4cb1-9ce4-f456fe44f3d1
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression 'Sales Data 2021' =
+		let
+		    Source = Csv.Document(File.Contents("C:\Users\Krishna Kavthekar\Downloads\AdventureWorks+Raw+Data\AdventureWorks Raw Data\AdventureWorks Sales Data 2021.csv"),[Delimiter=",", Columns=8, Encoding=1252, QuoteStyle=QuoteStyle.None]),
+		    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+		    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"OrderDate", type date}, {"StockDate", type date}, {"OrderNumber", type text}, {"ProductKey", Int64.Type}, {"CustomerKey", Int64.Type}, {"TerritoryKey", Int64.Type}, {"OrderLineItem", Int64.Type}, {"OrderQuantity", Int64.Type}})
+		in
+		    #"Changed Type"
+	lineageTag: 6bb6bf51-67fc-431f-b864-907e89266c99
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression 'Sales Data 2020' =
+		let
+		    Source = Csv.Document(File.Contents("C:\Users\Krishna Kavthekar\Downloads\AdventureWorks+Raw+Data\AdventureWorks Raw Data\AdventureWorks Sales Data 2020.csv"),[Delimiter=",", Columns=8, Encoding=1252, QuoteStyle=QuoteStyle.None]),
+		    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+		    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"OrderDate", type date}, {"StockDate", type date}, {"OrderNumber", type text}, {"ProductKey", Int64.Type}, {"CustomerKey", Int64.Type}, {"TerritoryKey", Int64.Type}, {"OrderLineItem", Int64.Type}, {"OrderQuantity", Int64.Type}})
+		in
+		    #"Changed Type"
+	lineageTag: 6fc061e5-37cf-4e67-b16e-1533fd2cd883
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression 'sales data 2020-2022' =
+		let
+		    Source = Table.Combine({#"Sales Data 2020", #"Sales Data 2021", #"Sales Data 2022"})
+		in
+		    Source
+	lineageTag: 01373141-4d45-405b-a49e-13487d8e16e7
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression 'Measure Table' =
+		let
+		    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("i44FAA==", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [Column1 = _t]),
+		    #"Changed Type" = Table.TransformColumnTypes(Source,{{"Column1", type text}}),
+		    #"Removed Columns" = Table.RemoveColumns(#"Changed Type",{"Column1"})
+		in
+		    #"Removed Columns"
+	lineageTag: 6b18943a-300c-4ce5-a803-a90c16760f1f
+
+	annotation PBI_ResultType = Table
+

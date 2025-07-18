@@ -1,0 +1,48 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-IN
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+queryGroup 'Transform File from Sales Data'
+
+	annotation PBI_QueryGroupOrder = 0
+
+queryGroup 'Transform File from Sales Data\Helper Queries'
+
+	annotation PBI_QueryGroupOrder = 0
+
+annotation PBI_QueryOrder = ["Product Lookup","Territory Lookup","Product Categories Lookup","Product Subcategories Lookup","Customer Lookup","Calendar Lookup","Sales Data 2022","Sales Data 2021","Sales Data 2020","sales data 2020-2022","Sales Data","Sample File","Parameter1","Transform Sample File","Transform File","Returns Data","Measure Table","Measure Table (2)"]
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBIDesktopVersion = 2.144.1155.0 (25.06)+46435b07013d2a234d7fd007083a9e70b8e79f1c
+
+annotation PBI_ProTooling = ["DaxQueryView_Desktop","DevMode"]
+
+ref table 'Product Lookup'
+ref table 'Territory Lookup'
+ref table 'Product Categories Lookup'
+ref table 'Product Subcategories Lookup'
+ref table 'Customer Lookup'
+ref table DateTableTemplate_8cd5cd7a-c10a-44a2-88cd-b23734409605
+ref table LocalDateTable_685aefb5-80e0-46c4-854c-7949a826bf7e
+ref table 'Calendar Lookup'
+ref table LocalDateTable_b7ec1567-f21a-4db8-8001-c38d5c600faa
+ref table LocalDateTable_294e551b-b415-4cf9-99db-71242ae792d2
+ref table LocalDateTable_f73d7099-5e53-4441-8f2a-53d741f82fd4
+ref table LocalDateTable_e4e8b3e8-3b55-4f72-ad9a-c3c339bb4163
+ref table 'Sales Data'
+ref table 'Returns Data'
+ref table 'Measure Table (2)'
+ref table LocalDateTable_338b3239-9ea6-4430-98ae-e467f2046916
+ref table 'Price Adjustement (%)'
+ref table 'product parameter'
+ref table 'customer Parameter'
+ref table 'Model Tables'
+ref table 'model Table'
+
+ref cultureInfo en-US
+

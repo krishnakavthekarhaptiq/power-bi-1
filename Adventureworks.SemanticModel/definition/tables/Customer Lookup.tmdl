@@ -1,0 +1,264 @@
+table 'Customer Lookup'
+	excludeFromModelRefresh
+	lineageTag: 7ae48bad-2c71-4193-aa62-c0f84363526c
+
+	measure 'Full Name (Customer Detail)' = ```
+			
+			IF(
+			    HASONEVALUE(
+			        'Customer Lookup'[CustomerKey]
+			        ),
+			    MAX(
+			        'Customer Lookup'[Full Name]
+			    ),
+			    "Multiple Customers"
+			    
+			)
+			```
+		lineageTag: 6e240bae-0da1-457a-b07f-4ebf7aaa066e
+
+	column CustomerKey
+		dataType: int64
+		formatString: 0
+		lineageTag: 49da9664-7682-4f88-9387-9c5ded106257
+		summarizeBy: none
+		sourceColumn: CustomerKey
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Prefix
+		dataType: string
+		lineageTag: afc6d7de-1595-4e93-8506-86814b79e8b0
+		summarizeBy: none
+		sourceColumn: Prefix
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column FirstName
+		dataType: string
+		lineageTag: 8b6d3c23-3d1e-4ccf-a15b-67111c8a443b
+		summarizeBy: none
+		sourceColumn: FirstName
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column LastName
+		dataType: string
+		lineageTag: 36a9d26c-5b58-492b-b639-2d5fb758e9ae
+		summarizeBy: none
+		sourceColumn: LastName
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column BirthDate
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 199197e3-c4d8-4887-8624-39d21aa2da84
+		summarizeBy: none
+		sourceColumn: BirthDate
+
+		variation Variation
+			isDefault
+			relationship: c2f279b1-a868-41ee-aca3-c78bd9928a9f
+			defaultHierarchy: LocalDateTable_685aefb5-80e0-46c4-854c-7949a826bf7e.'Date Hierarchy'
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column MaritalStatus
+		dataType: string
+		lineageTag: 464167f8-09cf-4f28-9d11-95e5a30d6eb1
+		summarizeBy: none
+		sourceColumn: MaritalStatus
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Gender
+		dataType: string
+		lineageTag: fb0f110e-912f-42ec-b354-eb8c6d2aea30
+		summarizeBy: none
+		sourceColumn: Gender
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column EmailAddress
+		dataType: string
+		lineageTag: da8f933a-3bc4-48f4-af91-81a8e7d25fff
+		summarizeBy: none
+		sourceColumn: EmailAddress
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column AnnualIncome
+		dataType: decimal
+		formatString: "₹"\ #,0.###############;#,0.###############\ -"₹";"₹"\ #,0.###############
+		lineageTag: 8dc23f97-d09d-4149-ad23-cc8cc64c93ee
+		summarizeBy: sum
+		sourceColumn: AnnualIncome
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-IN"}
+
+	column TotalChildren
+		dataType: int64
+		formatString: 0
+		lineageTag: db6ee7cb-9b9f-4052-b848-1861680a088a
+		summarizeBy: sum
+		sourceColumn: TotalChildren
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column EducationLevel
+		dataType: string
+		lineageTag: 229ffbe6-7038-4ed3-bd93-e373fb64e8e9
+		summarizeBy: none
+		sourceColumn: EducationLevel
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Occupation
+		dataType: string
+		lineageTag: 0e3f6cdd-d7f4-452b-a2d1-4d04a696ff3a
+		summarizeBy: none
+		sourceColumn: Occupation
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column HomeOwner
+		dataType: string
+		lineageTag: 323b39d1-0a89-4aa2-8a92-a3d03ef19f70
+		summarizeBy: none
+		sourceColumn: HomeOwner
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Full Name'
+		dataType: string
+		lineageTag: 46c4f650-a3f2-469f-8e7d-89f0a159c9db
+		summarizeBy: none
+		sourceColumn: Full Name
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Domain Name'
+		dataType: string
+		lineageTag: 04f2ec3f-25a0-43fe-891b-eacbdbd2cc40
+		summarizeBy: none
+		sourceColumn: Domain Name
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column parent = ```
+			IF('Customer Lookup'[TotalChildren]>0,"yes","no") 
+			```
+		lineageTag: 08daa548-ceaa-4baf-8dc7-3b0f97dc5637
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Customer priority' = ```
+			
+			IF(
+			    'Customer Lookup'[parent] = "yes"  &&
+			    'Customer Lookup'[AnnualIncome] > 100000, "PRIORITY",
+			    "Standard Priority"
+			)
+			    
+			```
+		lineageTag: 12620ac3-8e95-4407-a1de-b90e6cc00a21
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Income Level' = ```
+			
+			SWITCH(
+			    TRUE(),
+			    'Customer Lookup'[AnnualIncome] >= 150000 , "very high",
+			    'Customer Lookup'[AnnualIncome] >= 100000 , "high",
+			    'Customer Lookup'[AnnualIncome] >= 50000 , "Average","low" 
+			    )
+			```
+		lineageTag: ba900e9b-b8bd-4863-b42e-520dd4bfa2e1
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Eduction Category' = ```
+			
+			 SWITCH('Customer Lookup'[EducationLevel] ,
+			 "Bachelors","Undergrad",
+			 "Graduate Degree","Graduate",
+			 "Partial College","Undergrad",
+			 "Partial High School","High School",
+			 "High School","High school")
+			```
+		lineageTag: b35903dc-5372-44d1-af93-2fe8660efc7d
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Birth year' = YEAR('Customer Lookup'[BirthDate])
+		formatString: 0
+		lineageTag: 11f76e1e-1b39-4c43-819f-050da493bac4
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Customer Lookup' = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents("C:\Users\Krishna Kavthekar\Downloads\AdventureWorks+Raw+Data\AdventureWorks Raw Data\AdventureWorks Customer Lookup.csv"),[Delimiter=",", Columns=13, Encoding=1252, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"CustomerKey", Int64.Type}, {"Prefix", type text}, {"FirstName", type text}, {"LastName", type text}, {"BirthDate", type date}, {"MaritalStatus", type text}, {"Gender", type text}, {"EmailAddress", type text}, {"AnnualIncome", Int64.Type}, {"TotalChildren", Int64.Type}, {"EducationLevel", type text}, {"Occupation", type text}, {"HomeOwner", type text}}),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Changed Type",{{"AnnualIncome", Currency.Type}}),
+				    #"Removed Errors" = Table.RemoveRowsWithErrors(#"Changed Type1", {"CustomerKey"}),
+				    #"Filtered Rows" = Table.SelectRows(#"Removed Errors", each [CustomerKey] <> null and [CustomerKey] <> ""),
+				    #"Capitalized Each Word" = Table.TransformColumns(#"Filtered Rows",{{"Prefix", Text.Proper, type text}, {"FirstName", Text.Proper, type text}, {"LastName", Text.Proper, type text}}),
+				    #"Inserted Merged Column" = Table.AddColumn(#"Capitalized Each Word", "Full Name", each Text.Combine({[Prefix], [FirstName], [LastName]}, " "), type text),
+				    #"Duplicated Column" = Table.DuplicateColumn(#"Inserted Merged Column", "EmailAddress", "EmailAddress - Copy"),
+				    #"Renamed Columns" = Table.RenameColumns(#"Duplicated Column",{{"EmailAddress - Copy", "Domain Name"}}),
+				    #"Extracted Text After Delimiter" = Table.TransformColumns(#"Renamed Columns", {{"Domain Name", each Text.AfterDelimiter(_, "@"), type text}}),
+				    #"Extracted Text Before Delimiter" = Table.TransformColumns(#"Extracted Text After Delimiter", {{"Domain Name", each Text.BeforeDelimiter(_, "."), type text}}),
+				    #"Replaced Value" = Table.ReplaceValue(#"Extracted Text Before Delimiter","-","  ",Replacer.ReplaceText,{"Domain Name"}),
+				    #"Capitalized Each Word1" = Table.TransformColumns(#"Replaced Value",{{"Domain Name", Text.Proper, type text}})
+				in
+				    #"Capitalized Each Word1"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
